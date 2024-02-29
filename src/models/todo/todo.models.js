@@ -22,7 +22,7 @@ const todoSchema = new Schema(
     },
     owner: {
       type: String,
-      default: "",
+      required: true,
     },
   },
   { timestamps: true }

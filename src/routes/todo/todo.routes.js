@@ -4,13 +4,16 @@ import {
   createTodo,
   deleteTodo,
   getAllTodos,
+  createSingleTodo,
+  deleteSingleTodo,
   //   getTodoById,
   //   toggleTodoDoneStatus,
   //   updateTodo,
 } from "../../controllers/todo/todo.controllers.js";
 import {
   createTodoValidator,
-  getAllTodosQueryValidators,
+  queryValidator,
+  bodyValidator,
   updateTodoValidator,
 } from "../../validators/todo/todo.validators.js";
 import { mongoIdPathVariableValidator } from "../../validators/common/mongodb.validators.js";
@@ -26,18 +29,33 @@ function check(req, res, next) {
 router
   .route("/")
   .post(check, createTodoValidator(), validate, createTodo)
-  .get(getAllTodosQueryValidators(), validate, getAllTodos);
+  .get(queryValidator("owner"), validate, getAllTodos);
+
+router
+  .route("/todo/:todoId")
+  .post(
+    mongoIdPathVariableValidator("todoId"),
+    bodyValidator("todo"),
+    validate,
+    createSingleTodo
+  )
+  .delete(
+    mongoIdPathVariableValidator("todoId"),
+    queryValidator("index"),
+    validate,
+    deleteSingleTodo
+  );
 
 router
   .route("/:todoId")
-  //   .get(mongoIdPathVariableValidator("todoId"), validate, getTodoById)
-  //   .patch(
-  //     mongoIdPathVariableValidator("todoId"),
-  //     updateTodoValidator(),
-  //     validate,
-  //     updateTodo
-  //   )
   .delete(mongoIdPathVariableValidator("todoId"), validate, deleteTodo);
+//   .get(mongoIdPathVariableValidator("todoId"), validate, getTodoById)
+//   .patch(
+//     mongoIdPathVariableValidator("todoId"),
+//     updateTodoValidator(),
+//     validate,
+//     updateTodo
+//   )
 
 // router
 //   .route("/toggle/status/:todoId")

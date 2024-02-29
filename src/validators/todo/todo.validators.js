@@ -1,7 +1,20 @@
 import { body, query } from "express-validator";
 
-const getAllTodosQueryValidators = () => {
-  return [query("owner").trim().toLowerCase()];
+const queryValidator = (queryItem) => {
+  return [
+    query(`${queryItem}`)
+      .trim()
+      .toLowerCase()
+      .notEmpty()
+      .withMessage("Todo title is required"),
+  ];
+};
+
+const bodyValidator = (bodyItem) => {
+  console.log(bodyItem, "me here");
+  return [
+    body(`${bodyItem}`).trim().notEmpty().withMessage("Todo is required"),
+  ];
 };
 
 const createTodoValidator = () => {
@@ -27,4 +40,9 @@ const updateTodoValidator = () => {
   ];
 };
 
-export { createTodoValidator, updateTodoValidator, getAllTodosQueryValidators };
+export {
+  createTodoValidator,
+  updateTodoValidator,
+  queryValidator,
+  bodyValidator,
+};
